@@ -3,14 +3,19 @@ from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
+from kivy.clock import Clock
+from kivy.uix.screenmanager import ScreenManager, Screen
+from screens.welcome import WelcomeScreen  # Import WelcomeScreen
 
 kivy.require('2.0.0')
 
 
-class GameApp(App):
-    def build(self):
-        self.title = 'Game Menu'
+class MainMenuScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.create_menu()
 
+    def create_menu(self):
         # Create the root layout
         root = FloatLayout()
 
@@ -35,28 +40,44 @@ class GameApp(App):
 
         # Add the BoxLayout to the root layout
         root.add_widget(button_layout)
-
-        return root
+        self.add_widget(root)
 
     def load_game(self, instance):
         print("Load Game button pressed")
         # Placeholder for load game logic
-        self.start_game('load')
+        App.get_running_app().start_game('load')
 
     def new_game(self, instance):
         print("New Game button pressed")
-        # Placeholder for new game logic
-        self.start_game('new')
+        # Navigate to Welcome Screen
+        self.manager.current = 'welcome'
+        App.get_running_app().start_game('new')
+
+
+class GameApp(App):
+    def build(self):
+        self.title = 'Game Menu'
+
+        sm = ScreenManager()
+
+        # Add screens to the ScreenManager
+        sm.add_widget(MainMenuScreen(name='main_menu'))
+        sm.add_widget(WelcomeScreen(name='welcome'))
+
+        sm.current = 'main_menu'  # Set the initial screen
+
+        return sm
 
     def start_game(self, mode):
         print(f"Starting game in {mode} mode")
         # Placeholder for the game loop logic
-        self.run_game_loop()
+        Clock.schedule_interval(self.run_game_loop, 1.0 / 60.0)  # 60 FPS
 
-    def run_game_loop(self):
+    def run_game_loop(self, dt):
         print("Running the game loop...")
         # Placeholder for the main game loop
         # This is where the game logic would go
+        # dt is the time elapsed since the last frame
         pass
 
 
