@@ -74,7 +74,6 @@ class GameApp(App):
         Clock.schedule_interval(self.run_game_loop, 1.0 / 60.0)  # 60 FPS
 
     def run_game_loop(self, dt):
-        print("Running the game loop...")
         # Placeholder for the main game loop
         # This is where the game logic would go
         # dt is the time elapsed since the last frame
